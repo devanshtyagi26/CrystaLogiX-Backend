@@ -1,11 +1,22 @@
 # inference_server.py
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Depends
 from pydantic import BaseModel
 import onnxruntime as rt
 import numpy as np
 import os
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://crystalogix.netlify.app",
+    ],
+    allow_methods=["POST"],
+    allow_headers=["x-api-key", "Content-Type"],
+)
 
 API_KEY = os.environ["API_SECRET_KEY"]
 
