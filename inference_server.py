@@ -1,10 +1,17 @@
 # inference_server.py
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel
 import onnxruntime as rt
 import numpy as np
+import os
 
 app = FastAPI()
+
+API_KEY = os.environ["API_SECRET_KEY"]
+
+def verify_key(x_api_key: str = Header(...)):
+    if x_api_key != API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid API key.")
 
 clf = rt.InferenceSession("models/stage1_classifier.onnx")
 reg = rt.InferenceSession("models/stage2_regressor.onnx")
@@ -16,7 +23,7 @@ class PredictRequest(BaseModel):
 def read_root():
     return {"message": "Welcome to the Material Property Prediction API. Use POST /predict to get predictions."}
 
-@app.post("/api/predict")
+@app.post("/api/predict", dependencies=[Depends(verify_key)])
 def predict(req: PredictRequest):
     tensor = np.array([req.features], dtype=np.float32)
 
