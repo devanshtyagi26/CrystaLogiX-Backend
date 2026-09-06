@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-EXPECTED_FEATURES = 87
+EXPECTED_FEATURES = 86
 API_KEY           = os.environ["API_SECRET_KEY"]  # hard fail if not set
 
 # ── App ───────────────────────────────────────────────────────────────────────
@@ -18,7 +18,7 @@ app = FastAPI()
 # Only the Next.js server is allowed — not the browser directly
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://crystalogix.netlify.app"],
+    allow_origins=["https://crystalogix.devanshtyagi.app"],
     allow_methods=["POST"],
     allow_headers=["x-api-key", "Content-Type"],
 )
